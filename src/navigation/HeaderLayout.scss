@@ -1,0 +1,36 @@
+@import '../shared/Mixins';
+@import '../shared/Colors';
+@import '../shared/Variables';
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+
+  .layout--container {
+    height: 100vh;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.layout--container {
+  @include display-grid;
+  @include grid-columns(0 auto);
+  @include grid-rows(70px auto);
+
+  background-color: $light-grey;
+  grid-template-areas: 'nav header' 'nav body';
+  overflow: hidden;
+  width: 100%;
+
+  .content-container {
+    grid-area: body;
+    max-height: calc(100vh - 60px);
+    width: 100vw;
+    overflow-y: auto;
+  }
+}
