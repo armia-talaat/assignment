@@ -1,0 +1,107 @@
+@import 'Mixins';
+@import 'Colors';
+@import 'Variables';
+
+.hide {
+  display: none;
+}
+
+.center {
+  @include center;
+}
+
+.center--horizontal {
+  @include center-horizontal;
+}
+
+.center--vertical {
+  @include center-vertical;
+}
+.center--vertical-md {
+  @media (min-width: 992px) {
+    @include center-vertical;
+  }
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.block {
+  display: block;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.white-text {
+  color: #fff;
+}
+
+.grey-text {
+  color: $helper-grey;
+}
+
+.blue-text {
+  color: $main-blue;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.h5 {
+  height: 5px;
+}
+
+.h10 {
+  height: 10px;
+}
+
+.h20 {
+  height: 20px;
+}
+
+.width-50 {
+  width: 50%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-view {
+  width: 100%;
+  height: 100vh;
+}
+
+.grey-border {
+  border: 1px solid $helper-grey !important;
+}
+
+.red-bg {
+  background-color: $main-red;
+}
+
+.white-bg {
+  background-color: #fff;
+}
+
+.hr-margin {
+  margin: $spacing-3 0;
+}
+
+.font-family--lato {
+  font-family: Lato, sans-serif;
+}
