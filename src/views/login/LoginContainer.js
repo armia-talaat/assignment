@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import Login from './Login';
-import { getUser } from '../../store/actions/user';
+import { getUser, USER } from '../../store/actions/user';
 import '../../shared/Utils.scss';
 
 const mapStateToProps = state => ({
-  userLoaded: state.user.loaded
+  userLoaded: state.user.loaded,
+  responseType: state.user.type
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ getUser }, dispatch);
@@ -21,13 +22,14 @@ class LoginContainer extends Component {
   }
   componentDidMount() {}
   render() {
-    if (this.state.isLoading) {
-      return <Login signIn={this.props.getUser} />;
+    if (!this.props.userLoaded || this.props.responseType !== USER.GET_USER_DONE) {
+      return <Login signIn={this.props.getUser} responseType={this.props.responseType} />;
     }
   }
 }
 LoginContainer.propTypes = {
   userLoaded: PropTypes.bool,
+  responseType: PropTypes.string,
   getUser: PropTypes.func
 };
 
