@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from '../store';
+
 import HeaderLayout from '../navigation/HeaderLayout';
 import MenuContainer from './menu/MenuContainer';
-import './App.scss';
+
 const tabs = [
   {
     title: 'Menu Data',
