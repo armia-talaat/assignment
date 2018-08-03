@@ -35,7 +35,6 @@ export default (state = initialState, { type, ...payload }) => {
       };
     }
     case USER.GET_USER_FAIL: {
-      console.log(payload.user);
       return {
         ...state,
         type: USER.GET_USER_FAIL,
