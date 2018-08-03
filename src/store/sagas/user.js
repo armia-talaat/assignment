@@ -5,14 +5,12 @@ import { USER } from '../actions/user';
 function* getUser(payload) {
   const res = yield fetch('./users.json');
   const data = yield res.json();
-  console.log(res, data);
   if (data) {
-    let user = data.users.filter(user => {
-      if (user.name === payload.userName && user.password === payload.userPassword) {
-        return user;
-      }
-    });
-    if (user.length != 0) {
+    let user = data.users.find(
+      user => user.name === payload.userName && user.password === payload.userPassword
+    );
+    if (user) {
+      delete user.password;
       yield put({
         type: USER.GET_USER_DONE,
         user
@@ -20,7 +18,7 @@ function* getUser(payload) {
     } else {
       yield put({
         type: USER.GET_USER_NOT_FOUND,
-        user: ''
+        user: { user: '' }
       });
     }
   } else {
