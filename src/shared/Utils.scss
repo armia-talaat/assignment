@@ -34,7 +34,7 @@
 }
 
 .block {
-  display: block;
+  display: block !important;
 }
 
 .bold {
@@ -99,7 +99,13 @@
 }
 
 .hr-margin {
-  margin: $spacing-3 0;
+  margin-top: $spacing-4 !important;
+  margin-bottom: $spacing-4 !important;
+}
+
+.vr-auto-margin {
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .font-family--lato {
