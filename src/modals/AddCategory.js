@@ -11,7 +11,7 @@ class AddCategory extends Component {
       categoryId: '',
       responseState: this.getResponseState(props.responseType),
       responseMessage: this.getResponseMessage(props.responseType),
-      showModel: false
+      showModel: false,
     };
   }
 
@@ -19,13 +19,11 @@ class AddCategory extends Component {
     if (prevProps.responseType !== this.props.responseType) {
       this.setState({
         responseState: this.getResponseState(this.props.responseType),
-        responseMessage: this.getResponseMessage(this.props.responseType)
+        responseMessage: this.getResponseMessage(this.props.responseType),
       });
     }
   }
-  close = () => {
-    this.setState({ showModel: false });
-  };
+
   getResponseState = responseType => {
     switch (responseType) {
       case MENU.CATEGORY.ADD.SUCCESS: {
@@ -60,12 +58,14 @@ class AddCategory extends Component {
         return '';
     }
   };
+
+  close = () => {
+    this.setState({ showModel: false });
+  };
+
   render() {
     return (
       <Modal
-        ref={modal => {
-          this.addCategory = modal;
-        }}
         trigger={
           <Button
             className="block hr-margin vr-auto-margin"
@@ -84,14 +84,17 @@ class AddCategory extends Component {
       >
         <Modal.Header>Add Category</Modal.Header>
         <Modal.Content>
-          <Form success={this.state.responseState === 'success'} error={this.state.responseState === 'error'}>
+          <Form
+            success={this.state.responseState === 'success'}
+            error={this.state.responseState === 'error'}
+          >
             <Form.Field required>
               <label>Category Name</label>
               <Input
                 placeholder="Category Name"
                 onChange={e => {
                   this.setState({
-                    categoryName: e.target.value
+                    categoryName: e.target.value,
                   });
                 }}
               />
@@ -103,7 +106,7 @@ class AddCategory extends Component {
                 type="number"
                 onChange={e => {
                   this.setState({
-                    categoryId: parseFloat(e.target.value)
+                    categoryId: parseFloat(e.target.value),
                   });
                 }}
               />
@@ -126,7 +129,7 @@ class AddCategory extends Component {
   }
 }
 AddCategory.propTypes = {
-  userLoaded: PropTypes.bool
+  userLoaded: PropTypes.bool,
 };
 
 export default AddCategory;
