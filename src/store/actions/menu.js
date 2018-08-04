@@ -24,6 +24,7 @@ export const deleteStoredCategory = categoryId => ({
   type: MENU.DELETE_CATEGORY,
   categoryId
 });
+
 export const editStoredCategory = (oldCategoryId, categoryName, categoryID) => ({
   type: MENU.EDIT_CATEGORY,
   oldCategoryId,
