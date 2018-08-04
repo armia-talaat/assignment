@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Message } from 'semantic-ui-react';
+import { Modal, Form, Input, Button, Message } from 'semantic-ui-react';
 import '../../shared/Utils.scss';
 import { USER } from '../../store/actions/user';
 
@@ -54,50 +54,66 @@ class Login extends Component {
   };
   render() {
     return (
-      <div className="center center--horizontal center--vertical full-view">
-        <Form
-          success={this.getResponseType(this.state.responseType) === 'success'}
-          error={this.getResponseType(this.state.responseType) === 'error'}
-        >
-          <Form.Field required>
-            <label>User Name</label>
-            <Input
-              placeholder="User Name"
-              onChange={e => {
-                this.setState({
-                  username: e.target.value
-                });
-              }}
-            />
-          </Form.Field>
-          <Form.Field required>
-            <label>Password</label>
-            <Input
-              placeholder="Password"
-              type="password"
-              onChange={e => {
-                this.setState({
-                  password: e.target.value
-                });
-              }}
-            />
-          </Form.Field>
-          <Message
-            success
-            header="Login Success"
-            content={this.getResponseMessage(this.state.responseType)}
-          />
-          <Message error header="Login Failed" content={this.getResponseMessage(this.state.responseType)} />
-          <Button
-            type="submit"
-            onClick={() => {
-              this.props.signIn(this.state.username, this.state.password);
-            }}
-          >
-            Submit
+      <Modal
+        trigger={
+          <Button primary size="small" color="green" className="sign-in--btn">
+            Log in
           </Button>
-        </Form>
-      </div>
+        }
+        closeIcon
+      >
+        <Modal.Header>Login</Modal.Header>
+        <Modal.Content>
+          <div className="center center--horizontal center--vertical">
+            <Form
+              success={this.getResponseType(this.state.responseType) === 'success'}
+              error={this.getResponseType(this.state.responseType) === 'error'}
+            >
+              <Form.Field required>
+                <label>User Name</label>
+                <Input
+                  placeholder="User Name"
+                  onChange={e => {
+                    this.setState({
+                      username: e.target.value
+                    });
+                  }}
+                />
+              </Form.Field>
+              <Form.Field required>
+                <label>Password</label>
+                <Input
+                  placeholder="Password"
+                  type="password"
+                  onChange={e => {
+                    this.setState({
+                      password: e.target.value
+                    });
+                  }}
+                />
+              </Form.Field>
+              <Message
+                success
+                header="Login Success"
+                content={this.getResponseMessage(this.state.responseType)}
+              />
+              <Message
+                error
+                header="Login Failed"
+                content={this.getResponseMessage(this.state.responseType)}
+              />
+              <Button
+                type="submit"
+                onClick={() => {
+                  this.props.signIn(this.state.username, this.state.password);
+                }}
+              >
+                Submit
+              </Button>
+            </Form>
+          </div>
+        </Modal.Content>
+      </Modal>
     );
   }
 }
