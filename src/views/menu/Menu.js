@@ -7,6 +7,7 @@ import AddCategory from '../../modals/AddCategory';
 import DeleteItem from '../../modals/DeleteItem';
 import EditItem from '../../modals/EditItem';
 import AddItem from '../../modals/AddItem';
+import { MENU } from '../../store/actions/menu';
 
 class Menu extends Component {
   setItemStructure = items => {
@@ -38,6 +39,7 @@ class Menu extends Component {
         },
       }));
     }
+    return [];
   };
   setCategoryStructure = categories => {
     if (categories.length !== 0) {
@@ -70,9 +72,10 @@ class Menu extends Component {
         },
       }));
     }
+    return [];
   };
   render() {
-    if (this.props.menuState === this.props.menuStates.GET_MENU_DONE) {
+    if (this.props.menuState === MENU.GET_MENU_DONE) {
       return (
         <Fragment>
           {this.props.user.type === 'admin' && (
@@ -99,6 +102,36 @@ class Menu extends Component {
     );
   }
 }
-Menu.propTypes = {};
+Menu.propTypes = {
+  deleteCategory: PropTypes.func.isRequired,
+  editCategory: PropTypes.func.isRequired,
+  addCategory: PropTypes.func.isRequired,
+  addCategoryStateRevert: PropTypes.func.isRequired,
+  editCategoryStateRevert: PropTypes.func.isRequired,
+  deleteItem: PropTypes.func.isRequired,
+  editItem: PropTypes.func.isRequired,
+  editItemStateRevert: PropTypes.func.isRequired,
+  addItem: PropTypes.func.isRequired,
+  addItemStateRevert: PropTypes.func.isRequired,
+
+  menuState: PropTypes.string.isRequired,
+  addCategoryState: PropTypes.string.isRequired,
+  editCategoryState: PropTypes.string.isRequired,
+  addItemState: PropTypes.string.isRequired,
+  editItemState: PropTypes.string.isRequired,
+
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    id: PropTypes.number,
+  }).isRequired,
+  menuItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string,
+      items: PropTypes.array.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default Menu;

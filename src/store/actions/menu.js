@@ -96,7 +96,7 @@ export const deleteStoredItem = itemId => ({
 });
 
 export const editStoredItem = (oldItemId, itemName, itemId, itemDescription, itemPrice) => ({
-  type: MENU.CATEGORY.EDIT.INIT,
+  type: MENU.ITEM.EDIT.INIT,
   oldItemId,
   itemName,
   itemId,
@@ -106,4 +106,17 @@ export const editStoredItem = (oldItemId, itemName, itemId, itemDescription, ite
 
 export const editItemStateRevert = () => ({
   type: MENU.ITEM.EDIT.REVERT,
+});
+
+export const addNewItem = (categoryId, itemName, itemId, itemDescription, itemPrice) => ({
+  type: MENU.ITEM.ADD.INIT,
+  categoryId,
+  itemName,
+  itemId,
+  itemDescription,
+  itemPrice,
+});
+
+export const addItemStateRevert = () => ({
+  type: MENU.ITEM.ADD.REVERT,
 });

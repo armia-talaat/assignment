@@ -65,12 +65,13 @@ class EditCategory extends Component {
       <Modal
         trigger={
           <Button
-            positive
+            color="yellow"
+            className="block"
             onClick={() => {
               this.setState({ showModel: true });
             }}
           >
-            Edit
+            Edit Category
           </Button>
         }
         closeIcon
@@ -131,7 +132,13 @@ class EditCategory extends Component {
   }
 }
 EditCategory.propTypes = {
-  userLoaded: PropTypes.bool,
+  category: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    items: PropTypes.array.isRequired,
+  }).isRequired,
+  editCategory: PropTypes.func.isRequired,
+  responseType: PropTypes.string.isRequired,
 };
 
 export default EditCategory;

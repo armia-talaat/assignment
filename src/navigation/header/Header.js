@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { Modal, Button, Icon } from 'semantic-ui-react';
 import './Header.scss';
-import '../../views/login/LoginContainer';
 import LoginContainer from '../../views/login/LoginContainer';
 
 function Header(props) {
@@ -11,16 +10,20 @@ function Header(props) {
   let headerItems;
   let memberDetails;
 
-  if (props.title) {
-    headerItems = <h1 className="page-title">{props.title}</h1>;
-  } else if (props.tabs) {
+  if (props.tabs) {
     headerItems = props.tabs.map((item, index) => (
-      <NavLink className="tab" activeClassName="tab--active" href={item.url} to={item.url} key={index}>
+      <NavLink
+        className="tab"
+        activeClassName="tab--active"
+        href={item.url}
+        to={item.url}
+        key={`nav-${index}`}
+      >
         <h2 className="text">{item.title}</h2>
       </NavLink>
     ));
   }
-  //TODO: Seperate Logout Modal and Login to Modals
+  // TODO: Seperate Logout Modal and Login to Modals
   if (props.user && props.userLogged) {
     memberDetails = (
       <Fragment>
@@ -71,18 +74,20 @@ Header.propTypes = {
   tabs: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
-      url: PropTypes.string
-    })
-  ),
-  homeUrl: PropTypes.string,
-  title: PropTypes.string,
-  user: PropTypes.object,
-  userLogged: PropTypes.bool,
-  logoutUser: PropTypes.func
+      url: PropTypes.string,
+    }),
+  ).isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    id: PropTypes.number,
+  }),
+  userLogged: PropTypes.bool.isRequired,
+  logoutUser: PropTypes.func.isRequired,
 };
 
 Header.defaultProps = {
-  user: { user: '' }
+  user: { user: '' },
 };
 
 export default Header;

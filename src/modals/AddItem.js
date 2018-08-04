@@ -3,19 +3,20 @@ import PropTypes from 'prop-types';
 import { Modal, Form, Input, Button, Message, TextArea } from 'semantic-ui-react';
 import { MENU } from '../store/actions/menu';
 
-class EditItem extends Component {
+class AddItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      itemName: props.item.name,
-      itemId: props.item.id,
-      itemDescription: props.item.description,
-      itemPrice: props.item.price,
+      itemName: '',
+      itemId: '',
+      itemDescription: '',
+      itemPrice: '',
       responseState: this.getResponseState(props.responseType),
       responseMessage: this.getResponseMessage(props.responseType),
       showModel: false,
     };
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.responseType !== this.props.responseType) {
       this.setState({
@@ -27,17 +28,17 @@ class EditItem extends Component {
 
   getResponseState = responseType => {
     switch (responseType) {
-      case MENU.ITEM.EDIT.SUCCESS: {
+      case MENU.ITEM.ADD.SUCCESS: {
         this.setState({ showModel: false });
         return 'success';
       }
-      case MENU.ITEM.EDIT.FAIL.NAME: {
+      case MENU.ITEM.ADD.FAIL.NAME: {
         return 'error';
       }
-      case MENU.ITEM.EDIT.FAIL.ID: {
+      case MENU.ITEM.ADD.FAIL.ID: {
         return 'error';
       }
-      case MENU.ITEM.EDIT.FAIL.BOTH: {
+      case MENU.ITEM.ADD.FAIL.BOTH: {
         return 'error';
       }
       default:
@@ -46,33 +47,36 @@ class EditItem extends Component {
   };
   getResponseMessage = responseType => {
     switch (responseType) {
-      case MENU.ITEM.EDIT.FAIL.NAME: {
-        return 'There is another Item with the same Name';
+      case MENU.ITEM.ADD.FAIL.NAME: {
+        return 'Item Name is duplicate';
       }
-      case MENU.ITEM.EDIT.FAIL.ID: {
-        return 'There is another Item with the same Id';
+      case MENU.ITEM.ADD.FAIL.ID: {
+        return 'Item ID is duplicate';
       }
-      case MENU.ITEM.EDIT.FAIL.BOTH: {
-        return 'There is another Item with the same Data';
+      case MENU.ITEM.ADD.FAIL.BOTH: {
+        return 'Same Item is already stored';
       }
       default:
         return '';
     }
   };
+
   close = () => {
     this.setState({ showModel: false });
   };
+
   render() {
     return (
       <Modal
         trigger={
           <Button
-            color="yellow"
+            className="block"
+            positive
             onClick={() => {
               this.setState({ showModel: true });
             }}
           >
-            Edit Item
+            Add New Item
           </Button>
         }
         closeIcon
@@ -80,7 +84,7 @@ class EditItem extends Component {
         onOpen={this.props.revertState}
         onClose={this.close}
       >
-        <Modal.Header>Edit Item</Modal.Header>
+        <Modal.Header>Add Item</Modal.Header>
         <Modal.Content>
           <Form
             success={this.state.responseState === 'success'}
@@ -90,7 +94,6 @@ class EditItem extends Component {
               <label>Item Name</label>
               <Input
                 placeholder="Item Name"
-                value={this.state.itemName}
                 onChange={e => {
                   this.setState({
                     itemName: e.target.value,
@@ -102,7 +105,6 @@ class EditItem extends Component {
               <label>Item Id</label>
               <Input
                 placeholder="Item Id"
-                value={this.state.itemId}
                 type="number"
                 onChange={e => {
                   this.setState({
@@ -115,7 +117,6 @@ class EditItem extends Component {
               <label>Item Description</label>
               <TextArea
                 placeholder="Item Description"
-                value={this.state.itemDescription}
                 type="text"
                 onChange={e => {
                   this.setState({
@@ -128,7 +129,6 @@ class EditItem extends Component {
               <label>Item Price</label>
               <Input
                 placeholder="Item Price"
-                value={this.state.itemPrice}
                 type="number"
                 onChange={e => {
                   this.setState({
@@ -137,14 +137,14 @@ class EditItem extends Component {
                 }}
               />
             </Form.Field>
-            <Message success header="Edit Success" content={this.state.responseMessage} />
-            <Message error header="Edit Failed" content={this.state.responseMessage} />
+            <Message success header="Add Success" content={this.state.responseMessage} />
+            <Message error header="Add Failed" content={this.state.responseMessage} />
             <Button
               positive
               type="submit"
               onClick={() => {
-                this.props.editItem(
-                  this.props.item.id,
+                this.props.addItem(
+                  this.props.categoryId,
                   this.state.itemName,
                   this.state.itemId,
                   this.state.itemDescription,
@@ -160,16 +160,10 @@ class EditItem extends Component {
     );
   }
 }
-EditItem.propTypes = {
-  item: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    id: PropTypes.number.isRequired,
-    price: PropTypes.number,
-  }).isRequired,
+AddItem.propTypes = {
   responseType: PropTypes.string.isRequired,
-  editItem: PropTypes.func.isRequired,
+  addItem: PropTypes.func.isRequired,
   revertState: PropTypes.func.isRequired,
 };
 
-export default EditItem;
+export default AddItem;

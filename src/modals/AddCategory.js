@@ -129,7 +129,9 @@ class AddCategory extends Component {
   }
 }
 AddCategory.propTypes = {
-  userLoaded: PropTypes.bool,
+  responseType: PropTypes.string.isRequired,
+  addCategory: PropTypes.func.isRequired,
+  revertState: PropTypes.func.isRequired,
 };
 
 export default AddCategory;

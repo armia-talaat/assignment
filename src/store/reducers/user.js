@@ -3,7 +3,7 @@ import { USER } from '../actions/user';
 const initialState = {
   user: { name: '' },
   type: '',
-  loaded: false
+  loaded: false,
 };
 
 export default (state = initialState, { type, ...payload }) => {
@@ -12,16 +12,15 @@ export default (state = initialState, { type, ...payload }) => {
       return {
         ...state,
         type: USER.GET_USER,
-        loaded: false
+        loaded: false,
       };
     }
     case USER.GET_USER_DONE: {
-      console.log(USER.GET_USER_DONE, payload.user);
       return {
         ...state,
         type: USER.GET_USER_DONE,
         loaded: true,
-        user: payload.user
+        user: payload.user,
       };
     }
     case USER.GET_USER_NOT_FOUND: {
@@ -29,7 +28,7 @@ export default (state = initialState, { type, ...payload }) => {
         ...state,
         type: USER.GET_USER_NOT_FOUND,
         loaded: true,
-        user: payload.user
+        user: payload.user,
       };
     }
     case USER.GET_USER_FAIL: {
@@ -37,7 +36,7 @@ export default (state = initialState, { type, ...payload }) => {
         ...state,
         type: USER.GET_USER_FAIL,
         loaded: true,
-        user: payload.user
+        user: payload.user,
       };
     }
     case USER.GET_USER_LOGOUT: {
@@ -45,7 +44,7 @@ export default (state = initialState, { type, ...payload }) => {
         ...state,
         type: '',
         loaded: true,
-        user: payload.user
+        user: payload.user,
       };
     }
     default:

@@ -8,16 +8,15 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: !props.userLoaded,
       responseType: props.responseType,
       username: '',
-      password: ''
+      password: '',
     };
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.responseType !== nextProps.responseType) {
       return {
-        responseType: nextProps.responseType
+        responseType: nextProps.responseType,
       };
     }
     return null;
@@ -75,7 +74,7 @@ class Login extends Component {
                   placeholder="User Name"
                   onChange={e => {
                     this.setState({
-                      username: e.target.value
+                      username: e.target.value,
                     });
                   }}
                 />
@@ -87,7 +86,7 @@ class Login extends Component {
                   type="password"
                   onChange={e => {
                     this.setState({
-                      password: e.target.value
+                      password: e.target.value,
                     });
                   }}
                 />
@@ -118,7 +117,8 @@ class Login extends Component {
   }
 }
 Login.propTypes = {
-  userLoaded: PropTypes.bool
+  signIn: PropTypes.func.isRequired,
+  responseType: PropTypes.string.isRequired,
 };
 
 export default Login;

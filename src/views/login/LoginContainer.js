@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
@@ -8,32 +8,27 @@ import '../../shared/Utils.scss';
 
 const mapStateToProps = state => ({
   userLoaded: state.user.loaded,
-  responseType: state.user.type
+  responseType: state.user.type,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ getUser }, dispatch);
 
-class LoginContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: !props.userLoaded
-    };
-  }
-  componentDidMount() {}
+class LoginContainer extends PureComponent {
   render() {
-    if (!this.props.userLoaded || this.props.responseType !== USER.GET_USER_DONE) {
+    const { userLoaded, responseType } = this.props;
+    if (!userLoaded || responseType !== USER.GET_USER_DONE) {
       return <Login signIn={this.props.getUser} responseType={this.props.responseType} />;
     }
+    return false;
   }
 }
 LoginContainer.propTypes = {
-  userLoaded: PropTypes.bool,
-  responseType: PropTypes.string,
-  getUser: PropTypes.func
+  responseType: PropTypes.string.isRequired,
+  getUser: PropTypes.func.isRequired,
+  userLoaded: PropTypes.bool.isRequired,
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(LoginContainer);

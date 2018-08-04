@@ -21,7 +21,6 @@ export default (state = initialState, { type, ...payload }) => {
       };
     }
     case MENU.GET_MENU_DONE: {
-      console.log(MENU.GET_MENU_DONE, payload.user);
       return {
         ...state,
         type: MENU.GET_MENU_DONE,
@@ -88,7 +87,6 @@ export default (state = initialState, { type, ...payload }) => {
       };
     }
     case MENU.CATEGORY.EDIT.REVERT: {
-      console.log(MENU.CATEGORY.EDIT.REVERT);
       return {
         ...state,
         editCategoryState: ' ',
@@ -103,27 +101,22 @@ export default (state = initialState, { type, ...payload }) => {
         category => category.name === payload.categoryName,
       );
 
-      console.log(payload.categoryName, payload.categoryId);
       if (checkSameItem) {
-        console.log(MENU.CATEGORY.ADD.FAIL.BOTH);
         return {
           ...state,
           addCategoryState: MENU.CATEGORY.ADD.FAIL.BOTH,
         };
       } else if (checkDuplicateId) {
-        console.log(MENU.CATEGORY.ADD.FAIL.ID);
         return {
           ...state,
           addCategoryState: MENU.CATEGORY.ADD.FAIL.ID,
         };
       } else if (checkDuplicateName) {
-        console.log(MENU.CATEGORY.ADD.FAIL.NAME);
         return {
           ...state,
           addCategoryState: MENU.CATEGORY.ADD.FAIL.NAME,
         };
       }
-      console.log(MENU.CATEGORY.ADD.SUCCESS, checkDuplicateId, checkDuplicateName, checkSameItem);
       return {
         ...state,
         addCategoryState: MENU.CATEGORY.ADD.SUCCESS,
@@ -139,33 +132,52 @@ export default (state = initialState, { type, ...payload }) => {
       };
     }
     case MENU.CATEGORY.ADD.REVERT: {
-      console.log(MENU.CATEGORY.ADD.REVERT);
       return {
         ...state,
         addCategoryState: ' ',
       };
     }
     case MENU.ITEM.DELETE: {
+      const deleteCategoryIndex = state.menu.findIndex(category =>
+        category.items.find(item => item.id === payload.itemId),
+      );
+      const deleteItemIndex = state.menu[deleteCategoryIndex].items.findIndex(
+        item => item.id === payload.itemId,
+      );
       return {
         ...state,
-        menu: state.menu.map(category => category.filter(item => item.id !== payload.itemId)),
+        menu: update(state.menu, {
+          [deleteCategoryIndex]: {
+            items: {
+              $splice: [[deleteItemIndex, 1]],
+            },
+          },
+        }),
       };
     }
     case MENU.ITEM.EDIT.INIT: {
-      const checkSameItem = state.menu.map(category =>
-        category.find(
-          item =>
-            item.id === payload.itemId &&
-            item.name === payload.itemName &&
-            payload.oldItemId !== payload.itemId,
-        ),
-      );
-      const checkDuplicateId = state.menu.map(category =>
-        category.find(item => item.id === payload.itemId && payload.oldItemId !== payload.itemId),
-      );
-      const checkDuplicateName = state.menu.map(category =>
-        category.find(item => item.name === payload.itemName && payload.oldItemId !== item.id),
-      );
+      const checkSameItem =
+        payload.oldItemId !== payload.itemId &&
+        state.menu
+          .map(category =>
+            category.items.find(
+              item => item.id === payload.itemId && item.name === payload.itemName,
+            ),
+          )
+          .filter(object => object !== undefined).length > 0;
+      const checkDuplicateId =
+        payload.oldItemId !== payload.itemId &&
+        state.menu
+          .map(category => category.items.find(item => item.id === payload.itemId))
+          .filter(object => object !== undefined).length > 0;
+      const checkDuplicateName =
+        state.menu
+          .map(category =>
+            category.items.find(
+              item => item.name === payload.itemName && payload.oldItemId !== item.id,
+            ),
+          )
+          .filter(object => object !== undefined).length > 0;
       if (checkSameItem) {
         return {
           ...state,
@@ -183,30 +195,104 @@ export default (state = initialState, { type, ...payload }) => {
         };
       }
       const editedCategoryIndex = state.menu.findIndex(category =>
-        category.includes(payload.oldItemId),
+        category.items.find(item => item.id === payload.oldItemId),
       );
-      const editedItemIndex = state.menu.categories[editedCategoryIndex].findIndex(
+      const editedItemIndex = state.menu[editedCategoryIndex].items.findIndex(
         item => item.id === payload.oldItemId,
       );
-      console.log(editedCategoryIndex, editedItemIndex);
       return {
         ...state,
         editItemState: MENU.ITEM.EDIT.SUCCESS,
-        menu: update(state.menu[editedCategoryIndex], {
-          [editedItemIndex]: {
-            id: { $set: payload.itemId },
-            name: { $set: payload.itemName },
-            description: { $set: payload.itemDescription },
-            price: { $set: payload.itemPrice },
+        menu: update(state.menu, {
+          [editedCategoryIndex]: {
+            items: {
+              [editedItemIndex]: {
+                id: { $set: payload.itemId },
+                name: { $set: payload.itemName },
+                description: { $set: payload.itemDescription },
+                price: { $set: payload.itemPrice },
+              },
+            },
           },
         }),
       };
     }
+
+    case MENU.ITEM.ADD.INIT: {
+      const checkSameItem =
+        state.menu
+          .map(category =>
+            category.items.find(
+              item => item.id === payload.itemId && item.name === payload.itemName,
+            ),
+          )
+          .filter(object => object !== undefined).length > 0;
+      const checkDuplicateId =
+        state.menu
+          .map(category =>
+            category.items.find(
+              item => item.id === payload.itemId && item.name !== payload.itemName,
+            ),
+          )
+          .filter(object => object !== undefined).length > 0;
+      const checkDuplicateName =
+        state.menu
+          .map(category =>
+            category.items.find(
+              item => item.name === payload.itemName && payload.itemId !== item.id,
+            ),
+          )
+          .filter(object => object !== undefined).length > 0;
+      if (checkSameItem) {
+        return {
+          ...state,
+          addItemState: MENU.ITEM.ADD.FAIL.BOTH,
+        };
+      } else if (checkDuplicateId) {
+        return {
+          ...state,
+          addItemState: MENU.ITEM.ADD.FAIL.ID,
+        };
+      } else if (checkDuplicateName) {
+        return {
+          ...state,
+          addItemState: MENU.ITEM.ADD.FAIL.NAME,
+        };
+      }
+      const editedCategoryIndex = state.menu.findIndex(
+        category => category.id === payload.categoryId,
+      );
+      return {
+        ...state,
+        addItemState: MENU.ITEM.ADD.SUCCESS,
+        menu: update(state.menu, {
+          [editedCategoryIndex]: {
+            items: {
+              $push: [
+                {
+                  id: payload.itemId,
+                  name: payload.itemName,
+                  description: payload.itemDescription,
+                  price: payload.itemPrice,
+                },
+              ],
+            },
+          },
+        }),
+      };
+    }
+
     case MENU.ITEM.EDIT.REVERT: {
-      console.log(MENU.ITEM.EDIT.REVERT);
       return {
         ...state,
         editItemState: ' ',
+      };
+    }
+
+    case MENU.ITEM.ADD.REVERT: {
+      return {
+        ...state,
+        addItemState: ' ',
       };
     }
 

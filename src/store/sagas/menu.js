@@ -8,12 +8,12 @@ function* getMenu() {
   if (menu) {
     yield put({
       type: MENU.GET_MENU_DONE,
-      menu: menu.categories
+      menu: menu.categories,
     });
   } else {
     yield put({
       type: MENU.GET_MENU_FAIL,
-      menu: 'File not loaded'
+      menu: 'File not loaded',
     });
   }
 }
