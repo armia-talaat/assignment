@@ -1,9 +1,8 @@
 import { USER } from '../actions/user';
 
 const initialState = {
-  user: undefined,
+  user: { name: '' },
   type: '',
-  users: [],
   loaded: false
 };
 
@@ -26,7 +25,6 @@ export default (state = initialState, { type, ...payload }) => {
       };
     }
     case USER.GET_USER_NOT_FOUND: {
-      console.log(USER.GET_USER_NOT_FOUND, payload.user);
       return {
         ...state,
         type: USER.GET_USER_NOT_FOUND,
@@ -38,6 +36,14 @@ export default (state = initialState, { type, ...payload }) => {
       return {
         ...state,
         type: USER.GET_USER_FAIL,
+        loaded: true,
+        user: payload.user
+      };
+    }
+    case USER.GET_USER_LOGOUT: {
+      return {
+        ...state,
+        type: '',
         loaded: true,
         user: payload.user
       };
