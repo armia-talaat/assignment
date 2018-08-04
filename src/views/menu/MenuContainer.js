@@ -2,17 +2,31 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import Spinner from '../../components/spinner/Spinner';
 import { USER } from '../../store/actions/user';
-import '../../shared/Utils.scss';
+import {
+  MENU,
+  getMenu,
+  deleteStoredCategory,
+  editStoredCategory,
+  addNewCategory,
+  addCategoryStateRevert
+} from '../../store/actions/menu';
+import Menu from './Menu';
 
 const mapStateToProps = state => ({
   userLoaded: state.user.loaded,
   responseType: state.user.type,
-  user: state.user.user
+  user: state.user.user,
+  menuItems: state.menu.menu,
+  menuState: state.menu.type,
+  addCategoryState: state.menu.addCategoryState
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    { getMenu, deleteStoredCategory, editStoredCategory, addNewCategory, addCategoryStateRevert },
+    dispatch
+  );
 
 class MenuContainer extends Component {
   constructor(props) {
@@ -21,16 +35,43 @@ class MenuContainer extends Component {
       isLoading: !props.userLoaded
     };
   }
-  componentDidMount() {}
-  render() {
-    if (this.props.userLoaded && this.props.responseType === USER.GET_USER_DONE) {
-      return (
-        <div className="center center--horizontal center--vertical full-view">
-          <Spinner color="#a9f3d3" />
-        </div>
-      );
+  componentDidMount() {
+    this.props.getMenu();
+  }
+  deleteCategory = categoryId => {
+    if (this.props.user.name !== '' && this.props.user.type === 'admin') {
+      this.props.deleteStoredCategory(categoryId);
     }
-    return <div />;
+  };
+  editCategory = (oldCategoryId, categoryName, categoryID) => {
+    if (this.props.user.name !== '' && this.props.user.type === 'admin') {
+      this.props.editStoredCategory(oldCategoryId, categoryName, categoryID);
+    }
+  };
+  addCategory = (categoryName, categoryID) => {
+    if (this.props.user.name !== '' && this.props.user.type === 'admin') {
+      this.props.addNewCategory(categoryName, categoryID);
+    }
+  };
+  render() {
+    return (
+      <div className="full-view">
+        <Menu
+          menuItems={this.props.menuItems}
+          menuState={this.props.menuState}
+          menuStates={MENU}
+          user={this.props.user}
+          userLoaded={this.props.userLoaded}
+          userState={this.props.responseType}
+          userStates={USER}
+          deleteCategory={this.deleteCategory}
+          editCategory={this.editCategory}
+          addCategory={this.addCategory}
+          addCategoryState={this.props.addCategoryState}
+          addCategoryStateRevert={this.props.addCategoryStateRevert}
+        />
+      </div>
+    );
   }
 }
 MenuContainer.propTypes = {
