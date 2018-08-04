@@ -1,22 +1,89 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Form, Input, Button } from 'semantic-ui-react';
+import { Modal, Form, Input, Button, Message } from 'semantic-ui-react';
+import { MENU } from '../store/actions/menu';
 
 class EditCategory extends Component {
   constructor(props) {
     super(props);
     this.state = {
       categoryName: props.category.name,
-      categoryId: props.category.id
+      categoryId: props.category.id,
+      responseState: this.getResponseState(props.responseType),
+      responseMessage: this.getResponseMessage(props.responseType),
+      showModel: false,
     };
   }
+  componentDidUpdate(prevProps) {
+    if (prevProps.responseType !== this.props.responseType) {
+      this.setState({
+        responseState: this.getResponseState(this.props.responseType),
+        responseMessage: this.getResponseMessage(this.props.responseType),
+      });
+    }
+  }
 
+  getResponseState = responseType => {
+    switch (responseType) {
+      case MENU.CATEGORY.EDIT.SUCCESS: {
+        this.setState({ showModel: false });
+        return 'success';
+      }
+      case MENU.CATEGORY.EDIT.FAIL.NAME: {
+        return 'error';
+      }
+      case MENU.CATEGORY.EDIT.FAIL.ID: {
+        return 'error';
+      }
+      case MENU.CATEGORY.EDIT.FAIL.BOTH: {
+        return 'error';
+      }
+      default:
+        return '';
+    }
+  };
+  getResponseMessage = responseType => {
+    switch (responseType) {
+      case MENU.CATEGORY.EDIT.FAIL.NAME: {
+        return 'There is another Category with the same Name';
+      }
+      case MENU.CATEGORY.EDIT.FAIL.ID: {
+        return 'There is another Category with the same Id';
+      }
+      case MENU.CATEGORY.EDIT.FAIL.BOTH: {
+        return 'There is another Category with the same Data';
+      }
+      default:
+        return '';
+    }
+  };
+  close = () => {
+    this.setState({ showModel: false });
+  };
   render() {
     return (
-      <Modal trigger={<Button positive>Edit</Button>} closeIcon onClose={this.props.revertState}>
+      <Modal
+        trigger={
+          <Button
+            positive
+            onClick={() => {
+              this.setState({ showModel: true });
+            }}
+          >
+            Edit
+          </Button>
+        }
+        closeIcon
+        open={this.state.showModel}
+        onOpen={this.props.revertState}
+        onClose={this.close}
+      >
         <Modal.Header>Edit Category</Modal.Header>
         <Modal.Content>
-          <Form>
+          <Form
+            success={this.state.responseState === 'success'}
+            error={this.state.responseState === 'error'}
+          >
             <Form.Field required>
               <label>Category Name</label>
               <Input
@@ -24,7 +91,7 @@ class EditCategory extends Component {
                 value={this.state.categoryName}
                 onChange={e => {
                   this.setState({
-                    categoryName: e.target.value
+                    categoryName: e.target.value,
                   });
                 }}
               />
@@ -37,11 +104,13 @@ class EditCategory extends Component {
                 type="number"
                 onChange={e => {
                   this.setState({
-                    categoryId: parseFloat(e.target.value)
+                    categoryId: parseFloat(e.target.value),
                   });
                 }}
               />
             </Form.Field>
+            <Message success header="Add Success" content={this.state.responseMessage} />
+            <Message error header="Add Failed" content={this.state.responseMessage} />
             <Button
               positive
               type="submit"
@@ -49,7 +118,7 @@ class EditCategory extends Component {
                 this.props.editCategory(
                   this.props.category.id,
                   this.state.categoryName,
-                  this.state.categoryId
+                  this.state.categoryId,
                 );
               }}
             >
@@ -62,7 +131,7 @@ class EditCategory extends Component {
   }
 }
 EditCategory.propTypes = {
-  userLoaded: PropTypes.bool
+  userLoaded: PropTypes.bool,
 };
 
 export default EditCategory;
