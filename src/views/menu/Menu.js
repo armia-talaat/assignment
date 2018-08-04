@@ -1,22 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import { List, Accordion } from 'semantic-ui-react';
+import { List, Accordion, Dimmer, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import Spinner from '../../components/spinner/Spinner';
 import DeleteCategory from '../../modals/DeleteCategory';
 import EditCategory from '../../modals/EditCategory';
 import AddCategory from '../../modals/AddCategory';
 import DeleteItem from '../../modals/DeleteItem';
 import EditItem from '../../modals/EditItem';
+import AddItem from '../../modals/AddItem';
 
 class Menu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: !props.userLoaded,
-    };
-  }
-  componentDidMount() {}
-
   setItemStructure = items => {
     if (items.length !== 0) {
       return items.map(item => ({
@@ -32,14 +24,12 @@ class Menu extends Component {
               </List>
               {this.props.user.type === 'admin' && (
                 <div className="center--horizontal">
-                  {
-                    <EditItem
-                      item={item}
-                      editItem={this.props.editItem}
-                      responseType={this.props.editItemState}
-                      revertState={this.props.editItemStateRevert}
-                    />
-                  }
+                  <EditItem
+                    item={item}
+                    editItem={this.props.editItem}
+                    responseType={this.props.editItemState}
+                    revertState={this.props.editItemStateRevert}
+                  />
                   <DeleteItem item={item} deleteItem={this.props.deleteItem} />
                 </div>
               )}
@@ -59,6 +49,12 @@ class Menu extends Component {
             <Fragment>
               {this.props.user.type === 'admin' && (
                 <div className="center--horizontal">
+                  <AddItem
+                    categoryId={category.id}
+                    addItem={this.props.addItem}
+                    responseType={this.props.addItemState}
+                    revertState={this.props.addItemStateRevert}
+                  />
                   <EditCategory
                     category={category}
                     editCategory={this.props.editCategory}
@@ -96,13 +92,13 @@ class Menu extends Component {
     }
     return (
       <div className="center center--horizontal center--vertical full-view">
-        <Spinner color="#a9f3d3" />
+        <Dimmer active>
+          <Loader size="big">Loading</Loader>
+        </Dimmer>
       </div>
     );
   }
 }
-Menu.propTypes = {
-  userLoaded: PropTypes.bool,
-};
+Menu.propTypes = {};
 
 export default Menu;
