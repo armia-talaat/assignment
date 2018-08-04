@@ -4,5 +4,5 @@ import menu from './menu';
 
 export default combineReducers({
   user,
-  menu
+  menu,
 });
