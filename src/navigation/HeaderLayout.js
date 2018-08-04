@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Header from './header/Header';
 import './HeaderLayout.scss';
-import { USER } from '../store/actions/user';
+import { USER, logoutUser } from '../store/actions/user';
 
 const mapStateToProps = state => ({
   userLoaded: state.user.loaded,
   responseType: state.user.type,
   user: state.user.user
 });
+
+const mapDispatchToProps = dispatch => bindActionCreators({ logoutUser }, dispatch);
 class HeaderLayout extends Component {
   render() {
     const { title, tabs, userLoaded, user, responseType } = this.props;
@@ -23,6 +26,7 @@ class HeaderLayout extends Component {
             tabs={tabs}
             userLogged={userLoaded && responseType === USER.GET_USER_DONE}
             user={user}
+            logoutUser={this.props.logoutUser}
             homeUrl={this.props.homeUrl}
           />
           <div className="content-container">{this.props.children}</div>
@@ -48,4 +52,7 @@ HeaderLayout.propTypes = {
   homeUrl: PropTypes.string.isRequired
 };
 
-export default connect(mapStateToProps)(HeaderLayout);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HeaderLayout);
