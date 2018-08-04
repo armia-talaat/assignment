@@ -4,7 +4,8 @@ import update from 'immutability-helper';
 const initialState = {
   menu: [],
   type: '',
-  loaded: false
+  loaded: false,
+  addCategoryState: ''
 };
 
 export default (state = initialState, { type, ...payload }) => {
@@ -33,21 +34,72 @@ export default (state = initialState, { type, ...payload }) => {
         menu: payload.menu
       };
     }
-    case MENU.DELETE_CATEGORY: {
+    case MENU.CATEGORY.DELETE: {
       return {
         ...state,
         menu: state.menu.filter(category => category.id !== payload.categoryId)
       };
     }
-    case MENU.EDIT_CATEGORY: {
+    case MENU.CATEGORY.EDIT: {
+      let editedItemIndex = state.menu.findIndex(category => category.id === payload.oldCategoryId);
       return {
         ...state,
         menu: update(state.menu, {
-          [payload.oldCategoryId]: {
+          [editedItemIndex]: {
             name: { $set: payload.categoryName },
-            id: { $set: payload.categoryName }
+            id: { $set: payload.categoryId }
           }
         })
+      };
+    }
+    case MENU.CATEGORY.ADD.INIT: {
+      let checkSameItem = state.menu.find(
+        category => category.id === payload.categoryId && category.name === payload.categoryName
+      );
+      let checkDuplicateId = state.menu.find(category => category.id === payload.categoryId);
+      let checkDuplicateName = state.menu.find(category => category.name === payload.categoryName);
+
+      console.log(payload.categoryName, payload.categoryId);
+      if (checkSameItem) {
+        console.log(MENU.CATEGORY.ADD.FAIL.BOTH);
+        return {
+          ...state,
+          addCategoryState: MENU.CATEGORY.ADD.FAIL.BOTH
+        };
+      } else if (checkDuplicateId) {
+        console.log(MENU.CATEGORY.ADD.FAIL.ID);
+        return {
+          ...state,
+          addCategoryState: MENU.CATEGORY.ADD.FAIL.ID
+        };
+      } else if (checkDuplicateName) {
+        console.log(MENU.CATEGORY.ADD.FAIL.NAME);
+        return {
+          ...state,
+          addCategoryState: MENU.CATEGORY.ADD.FAIL.NAME
+        };
+      } else {
+        console.log(MENU.CATEGORY.ADD.SUCCESS, checkDuplicateId, checkDuplicateName, checkSameItem);
+        return {
+          ...state,
+          addCategoryState: MENU.CATEGORY.ADD.SUCCESS,
+          menu: update(state.menu, {
+            $push: [
+              {
+                id: payload.categoryId,
+                name: payload.categoryName,
+                items: []
+              }
+            ]
+          })
+        };
+      }
+    }
+    case MENU.CATEGORY.ADD.REVERT: {
+      console.log(MENU.CATEGORY.ADD.REVERT);
+      return {
+        ...state,
+        addCategoryState: ' '
       };
     }
 
