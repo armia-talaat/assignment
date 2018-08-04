@@ -1,4 +1,4 @@
-@import 'Breakpoints';
+// @import 'Breakpoints';
 @import 'Colors';
 
 /// Adds a browser prefix to the property
@@ -21,7 +21,14 @@
   animate: 0.2s;
 }
 
-@mixin thumb($thumb-border-width, $thumb-border-color, $thumb-height, $thumb-width, $thumb-radius, $thumb-color) {
+@mixin thumb(
+  $thumb-border-width,
+  $thumb-border-color,
+  $thumb-height,
+  $thumb-width,
+  $thumb-radius,
+  $thumb-color
+) {
   border: $thumb-border-width solid $thumb-border-color;
   height: $thumb-height;
   width: $thumb-width;
@@ -54,7 +61,7 @@
 }
 
 // Change placeholder color
-@mixin placeholder($color, $alignment:initial) {
+@mixin placeholder($color, $alignment: initial) {
   $transistion-time: 200ms;
 
   &.placeholder {
@@ -83,26 +90,33 @@
 }
 
 // Linear gradient
-@mixin horizontal-linear-gradient($from, $to, $from-color,$from-color-percentage, $to-color, $to-color-percentage) {
+@mixin horizontal-linear-gradient(
+  $from,
+  $to,
+  $from-color,
+  $from-color-percentage,
+  $to-color,
+  $to-color-percentage
+) {
   background-image: -ms-linear-gradient(
     $from,
-    $from-color $from-color-percentage*1%,
-    $to-color $to-color-percentage*1%
+    $from-color $from-color-percentage * 1%,
+    $to-color $to-color-percentage * 1%
   );
   background-image: -moz-linear-gradient(
     $from,
-    $from-color $from-color-percentage*1%,
-    $to-color $to-color-percentage*1%
+    $from-color $from-color-percentage * 1%,
+    $to-color $to-color-percentage * 1%
   );
   background-image: -o-linear-gradient(
     $from,
-    $from-color $from-color-percentage*1%,
-    $to-color $to-color-percentage*1%
+    $from-color $from-color-percentage * 1%,
+    $to-color $to-color-percentage * 1%
   );
   background-image: -webkit-linear-gradient(
     $from,
-    $from-color $from-color-percentage*1%,
-    $to-color $to-color-percentage*1%
+    $from-color $from-color-percentage * 1%,
+    $to-color $to-color-percentage * 1%
   );
   background-image: -webkit-gradient(
     linear,
@@ -113,8 +127,8 @@
   );
   background-image: linear-gradient(
     to $to,
-    $from-color $from-color-percentage*1%,
-    $to-color $to-color-percentage*1%
+    $from-color $from-color-percentage * 1%,
+    $to-color $to-color-percentage * 1%
   );
 }
 
